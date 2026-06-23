@@ -19,12 +19,12 @@ services:
       sizeGB: 1
 
   # 2. React Static Frontend Site
-  - type: static
+  - type: web
     name: fraud-detection-frontend
-    runtime: node
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishPath: dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         # Automatically resolves to the backend service's public domain URL
