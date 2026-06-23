@@ -1,24 +1,19 @@
 services:
-  # 1. FastAPI Python Backend Web Service
+  # 1. FastAPI Python Backend Web Service (100% FREE)
   - type: web
     name: fraud-detection-backend
     runtime: python
     rootDir: backend
-    # Force binary wheels to speed up build and prevent compiler dependency failures
     buildCommand: "pip install --only-binary :all: -r requirements.txt"
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
-        # Stores the SQLite DB on a persistent disk mount so data is not wiped out between deploys
-        value: sqlite:////data/fraud_detection_inr.db
+        # Runs SQLite locally inside the container (completely free, no paid disk needed)
+        value: sqlite:///./fraud_detection_inr.db
       - key: PYTHON_VERSION
         value: 3.11.5
-    disk:
-      name: backend-db-disk
-      mountPath: /data
-      sizeGB: 1
 
-  # 2. React Static Frontend Site
+  # 2. React Static Frontend Site (100% FREE)
   - type: web
     name: fraud-detection-frontend
     runtime: static
@@ -27,8 +22,6 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        # Automatically resolves to the backend service's public domain URL
         value: https://${fraud-detection-backend.host}/api
       - key: VITE_WS_URL
-        # Automatically resolves to the backend service's public websocket URL
         value: wss://${fraud-detection-backend.host}/api/stream/ws
